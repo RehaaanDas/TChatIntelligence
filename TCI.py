@@ -1,11 +1,9 @@
+import sys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import threading
-from colorama import init, Back, Fore
 import asyncio
 from websockets.asyncio.server import serve
-
-init(autoreset=True)
 
 options = webdriver.ChromeOptions()
 options.add_experimental_option("excludeSwitches", ["enable-automation"])
@@ -13,9 +11,10 @@ options.add_experimental_option('useAutomationExtension', False)
 options.add_argument("--disable-blink-features=AutomationControlled")
 
 driver = webdriver.Chrome(options=options)
-#driver.get("http://127.0.0.1:5500/test.html")
+
+#bot channel
 driver.get("https://discord.com/channels/251072485095636994/251116850132287490")
-input(Fore.YELLOW + "Login then Enter to continue...")
+input("Login then Enter to continue...")
 print(driver.title)
 
 curr = ""
@@ -35,9 +34,7 @@ async def feed(action):
                 if(msg not in seen):
                     content = msg.find_elements(by=By.CLASS_NAME, value="messageContent_c19a55");
                     prompt = msg.find_element(by=By.CLASS_NAME, value="repliedMessage_c19a55").get_attribute("aria-label").split(" replying to ");
-                    if(prompt[1] == "植物时代"):
-                        print("\n")
-                        print(content[0].text)
+                    if(prompt[1] == sys.argv[1]):
                         if(content[0].text == curr): await action(content[1].text)
                     seen.append(msg)
             except: 
