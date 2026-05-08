@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TCI</title>
+    <style>
+        body{
+            margin-left: 10%;
+            margin-right: 10%;
+            font-family: monospace;
+            font-size: 20px;
+        }
+        p{
+            text-align: right;
+            width: 100%;
+        }
+    </style>
+</head>
+    <input id="prompt" placeholder="your prompt"> TChatIntelligence
+<body id="body">
+    <script>
+        const ws = new WebSocket("ws://localhost:8003");
+        let show = false
+
+        function send(){
+            prompt = document.getElementById("prompt").value;
+            ws.send(prompt);
+            document.getElementById("body").innerHTML += `<p>${prompt}</p>`;
+        }
+
+        function rec(text){
+            if(show) document.getElementById("body").innerHTML += "<br>" + text;
+        }
+
+        window.addEventListener('keypress', (event) => {
+            if(event.key == "Enter"){
+                show = true
+                send();
+            }
+        })
+
+        ws.addEventListener('message', (event) => {
+            rec(event.data);
+        })
+    </script>
+</body>
+</html>
